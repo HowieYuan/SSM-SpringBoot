@@ -1,4 +1,4 @@
-package com.swit.model;
+package com.howie.model;
 
 /**
  * Created with IntelliJ IDEA

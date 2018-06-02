@@ -1,14 +1,14 @@
-package com.swit;
+package com.howie;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(value = "com.swit.dao")
-public class ProjectframeworkApplication {
+@MapperScan(value = "com.howie.dao")
+public class SpringbootSsmApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProjectframeworkApplication.class, args);
+		SpringApplication.run(SpringbootSsmApplication.class, args);
 	}
 }

@@ -1,7 +1,6 @@
-package com.swit.controller;
+package com.howie.controller;
 
-import com.swit.sevice.MyService;
-import com.swit.util.MyUtil;
+import com.howie.sevice.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,17 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MyController {
     private final MyService myService;
-    private final MyUtil myUtil;
 
     @Autowired
-    public MyController(MyService myService, MyUtil myUtil) {
+    public MyController(MyService myService) {
         this.myService = myService;
-        this.myUtil = myUtil;
     }
 
     @RequestMapping(value = "/test")
     public String getShufflingImg(){
-        myUtil.test();
         return myService.test();
     }
 }

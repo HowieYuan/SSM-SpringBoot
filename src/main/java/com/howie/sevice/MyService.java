@@ -1,6 +1,6 @@
-package com.swit.sevice;
+package com.howie.sevice;
 
-import com.swit.dao.MyMapper;
+import com.howie.dao.MyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.swit.dao;
+package com.howie.dao;
 
 import org.springframework.stereotype.Repository;
 
