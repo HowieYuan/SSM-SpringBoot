@@ -12,7 +12,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringbootSsmApplicationTests {
+public class ApplicationTests {
 	@Resource
 	private SysRegionDao sysRegionDao;
 	@Test
