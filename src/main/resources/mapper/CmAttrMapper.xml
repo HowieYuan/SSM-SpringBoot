@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.howie.mybatis.dao.CmAttrDao">
+	<resultMap type="com.howie.entity.CmAttrDO" id="cmAttrResultMap">
+		<result property="attrId" column="ATTR_ID"/>
+		<result property="organId" column="ORGAN_ID"/>
+		<result property="attrName" column="ATTR_NAME"/>
+		<result property="level" column="LEVEL"/>
+		<result property="parentAttrId" column="PARENT_ATTR_ID"/>
+		<result property="attrCode" column="ATTR_CODE"/>
+		<result property="attrType" column="ATTR_TYPE"/>
+		<result property="attrValueType" column="ATTR_VALUE_TYPE"/>
+		<result property="attrValueLength" column="ATTR_VALUE_LENGTH"/>
+		<result property="attrValueMethod" column="ATTR_VALUE_METHOD"/>
+		<result property="isEnum" column="IS_ENUM"/>
+		<result property="readOnly" column="READ_ONLY"/>
+		<result property="remark" column="REMARK"/>
+		<result property="attrOrder" column="ATTR_ORDER"/>
+		<result property="attrStatus" column="ATTR_STATUS"/>
+		<result property="createBy" column="CREATE_BY"/>
+		<result property="createDate" column="CREATE_DATE"/>
+		<result property="updateBy" column="UPDATE_BY"/>
+		<result property="updateDate" column="UPDATE_DATE"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		ATTR_ID,
+		ORGAN_ID,
+		ATTR_NAME,
+		LEVEL,
+		PARENT_ATTR_ID,
+		ATTR_CODE,
+		ATTR_TYPE,
+		ATTR_VALUE_TYPE,
+		ATTR_VALUE_LENGTH,
+		ATTR_VALUE_METHOD,
+		IS_ENUM,
+		READ_ONLY,
+		REMARK,
+		ATTR_ORDER,
+		ATTR_STATUS,
+		CREATE_BY,
+		CREATE_DATE,
+		UPDATE_BY,
+		UPDATE_DATE
+    </sql>
+	<sql id="entity_properties">
+		#{attrId},
+		#{organId},
+		#{attrName},
+		#{level},
+		#{parentAttrId},
+		#{attrCode},
+		#{attrType},
+		#{attrValueType},
+		#{attrValueLength},
+		#{attrValueMethod},
+		#{isEnum},
+		#{readOnly},
+		#{remark},
+		#{attrOrder},
+		#{attrStatus},
+		#{createBy},
+		#{createDate},
+		#{updateBy},
+		#{updateDate}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="attrId != null">and ATTR_ID = #{attrId}</if>
+			<if test="organId != null">and ORGAN_ID = #{organId}</if>
+            <if test="attrName != null and attrName != ''">and ATTR_NAME = #{attrName}</if>
+            <if test="level != null and level != ''">and LEVEL = #{level}</if>
+			<if test="parentAttrId != null">and PARENT_ATTR_ID = #{parentAttrId}</if>
+            <if test="attrCode != null and attrCode != ''">and ATTR_CODE = #{attrCode}</if>
+			<if test="attrType != null">and ATTR_TYPE = #{attrType}</if>
+            <if test="attrValueType != null and attrValueType != ''">and ATTR_VALUE_TYPE = #{attrValueType}</if>
+			<if test="attrValueLength != null">and ATTR_VALUE_LENGTH = #{attrValueLength}</if>
+			<if test="attrValueMethod != null">and ATTR_VALUE_METHOD = #{attrValueMethod}</if>
+			<if test="isEnum != null">and IS_ENUM = #{isEnum}</if>
+			<if test="readOnly != null">and READ_ONLY = #{readOnly}</if>
+            <if test="remark != null and remark != ''">and REMARK = #{remark}</if>
+			<if test="attrOrder != null">and ATTR_ORDER = #{attrOrder}</if>
+			<if test="attrStatus != null">and ATTR_STATUS = #{attrStatus}</if>
+			<if test="createBy != null">and CREATE_BY = #{createBy}</if>
+			<if test="createDate != null">and CREATE_DATE = #{createDate}</if>
+			<if test="updateBy != null">and UPDATE_BY = #{updateBy}</if>
+			<if test="updateDate != null">and UPDATE_DATE = #{updateDate}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.howie.entity.CmAttrDO">
+		insert into cm_attr( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into cm_attr( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+		#{item.attrId},
+				#{item.organId},
+				#{item.attrName},
+				#{item.level},
+				#{item.parentAttrId},
+				#{item.attrCode},
+				#{item.attrType},
+				#{item.attrValueType},
+				#{item.attrValueLength},
+				#{item.attrValueMethod},
+				#{item.isEnum},
+				#{item.readOnly},
+				#{item.remark},
+				#{item.attrOrder},
+				#{item.attrStatus},
+				#{item.createBy},
+				#{item.createDate},
+				#{item.updateBy},
+				#{item.updateDate}
+		)
+		</foreach>
+	</insert>
+
+	<delete id="delete" parameterType="String">
+		delete from cm_attr
+		where attr_id = #{attrId}
+	</delete>
+	
+	<update id="deleteBatch">
+		update cm_attr set delete_flag = 1
+		where attr_id in
+		<foreach collection="array" item="id" open="(" separator="," close=")">  
+            #{id} 
+        </foreach>		
+	</update>
+
+	<update id="deleteLogic" parameterType="String">
+		update cm_attr set delete_flag = 1 
+		where attr_id = #{attrId}
+	</update>
+
+	<update id="update" parameterType="com.howie.entity.CmAttrDO">
+		update cm_attr 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="organId != null">ORGAN_ID = #{organId},</if>
+            <if test="attrName != null and attrName != ''">ATTR_NAME = #{attrName},</if>
+            <if test="level != null and level != ''">LEVEL = #{level},</if>
+			<if test="parentAttrId != null">PARENT_ATTR_ID = #{parentAttrId},</if>
+            <if test="attrCode != null and attrCode != ''">ATTR_CODE = #{attrCode},</if>
+			<if test="attrType != null">ATTR_TYPE = #{attrType},</if>
+            <if test="attrValueType != null and attrValueType != ''">ATTR_VALUE_TYPE = #{attrValueType},</if>
+			<if test="attrValueLength != null">ATTR_VALUE_LENGTH = #{attrValueLength},</if>
+			<if test="attrValueMethod != null">ATTR_VALUE_METHOD = #{attrValueMethod},</if>
+			<if test="isEnum != null">IS_ENUM = #{isEnum},</if>
+			<if test="readOnly != null">READ_ONLY = #{readOnly},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+			<if test="attrOrder != null">ATTR_ORDER = #{attrOrder},</if>
+			<if test="attrStatus != null">ATTR_STATUS = #{attrStatus},</if>
+			<if test="createBy != null">CREATE_BY = #{createBy},</if>
+			<if test="createDate != null">CREATE_DATE = #{createDate},</if>
+			<if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+			<if test="updateDate != null">UPDATE_DATE = #{updateDate},</if>
+		</trim>
+		<where>attr_id = #{attrId}</where>
+	</update>
+
+    <select id="findAll" resultMap="cmAttrResultMap">
+        select <include refid="table_columns" />
+        from cm_attr
+    </select>
+
+    <select id="findList" resultMap="cmAttrResultMap">
+        select <include refid="table_columns" />
+        from cm_attr
+        <include refid="page_where" />
+	</select>
+
+    <select id="getCount" resultType="int" >
+        select count(attr_id) from cm_attr
+        <include refid="page_where" />
+    </select>
+
+
+    <select id="get" resultMap="cmAttrResultMap" parameterType="String" >
+		select <include refid="table_columns" />
+		from cm_attr
+		where attr_id = #{id}
+	</select>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>
