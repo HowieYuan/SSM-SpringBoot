@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.howie.mybatis.dao.CmAttrEnumDao">
+	<resultMap type="com.howie.entity.CmAttrEnumDO" id="cmAttrEnumResultMap">
+		<result property="enumId" column="ENUM_ID"/>
+		<result property="attrId" column="ATTR_ID"/>
+		<result property="parentEnumId" column="PARENT_ENUM_ID"/>
+		<result property="enumLevel" column="ENUM_LEVEL"/>
+		<result property="enumName" column="ENUM_NAME"/>
+		<result property="enumCode" column="ENUM_CODE"/>
+		<result property="enumOrder" column="ENUM_ORDER"/>
+		<result property="isChecked" column="IS_CHECKED"/>
+		<result property="enumStatus" column="ENUM_STATUS"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		ENUM_ID,
+		ATTR_ID,
+		PARENT_ENUM_ID,
+		ENUM_LEVEL,
+		ENUM_NAME,
+		ENUM_CODE,
+		ENUM_ORDER,
+		IS_CHECKED,
+		ENUM_STATUS
+    </sql>
+	<sql id="entity_properties">
+		#{enumId},
+		#{attrId},
+		#{parentEnumId},
+		#{enumLevel},
+		#{enumName},
+		#{enumCode},
+		#{enumOrder},
+		#{isChecked},
+		#{enumStatus}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="enumId != null">and ENUM_ID = #{enumId}</if>
+			<if test="attrId != null">and ATTR_ID = #{attrId}</if>
+			<if test="parentEnumId != null">and PARENT_ENUM_ID = #{parentEnumId}</if>
+			<if test="enumLevel != null">and ENUM_LEVEL = #{enumLevel}</if>
+            <if test="enumName != null and enumName != ''">and ENUM_NAME = #{enumName}</if>
+            <if test="enumCode != null and enumCode != ''">and ENUM_CODE = #{enumCode}</if>
+			<if test="enumOrder != null">and ENUM_ORDER = #{enumOrder}</if>
+			<if test="isChecked != null">and IS_CHECKED = #{isChecked}</if>
+			<if test="enumStatus != null">and ENUM_STATUS = #{enumStatus}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.howie.entity.CmAttrEnumDO">
+		insert into cm_attr_enum( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into cm_attr_enum( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+		#{item.enumId},
+				#{item.attrId},
+				#{item.parentEnumId},
+				#{item.enumLevel},
+				#{item.enumName},
+				#{item.enumCode},
+				#{item.enumOrder},
+				#{item.isChecked},
+				#{item.enumStatus}
+		)
+		</foreach>
+	</insert>
+
+	<delete id="delete" parameterType="String">
+		delete from cm_attr_enum
+		where enum_id = #{enumId}
+	</delete>
+	
+	<update id="deleteBatch">
+		update cm_attr_enum set delete_flag = 1
+		where enum_id in
+		<foreach collection="array" item="id" open="(" separator="," close=")">  
+            #{id} 
+        </foreach>		
+	</update>
+
+	<update id="deleteLogic" parameterType="String">
+		update cm_attr_enum set delete_flag = 1 
+		where enum_id = #{enumId}
+	</update>
+
+	<update id="update" parameterType="com.howie.entity.CmAttrEnumDO">
+		update cm_attr_enum 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="attrId != null">ATTR_ID = #{attrId},</if>
+			<if test="parentEnumId != null">PARENT_ENUM_ID = #{parentEnumId},</if>
+			<if test="enumLevel != null">ENUM_LEVEL = #{enumLevel},</if>
+            <if test="enumName != null and enumName != ''">ENUM_NAME = #{enumName},</if>
+            <if test="enumCode != null and enumCode != ''">ENUM_CODE = #{enumCode},</if>
+			<if test="enumOrder != null">ENUM_ORDER = #{enumOrder},</if>
+			<if test="isChecked != null">IS_CHECKED = #{isChecked},</if>
+			<if test="enumStatus != null">ENUM_STATUS = #{enumStatus},</if>
+		</trim>
+		<where>enum_id = #{enumId}</where>
+	</update>
+
+    <select id="findAll" resultMap="cmAttrEnumResultMap">
+        select <include refid="table_columns" />
+        from cm_attr_enum
+    </select>
+
+    <select id="findList" resultMap="cmAttrEnumResultMap">
+        select <include refid="table_columns" />
+        from cm_attr_enum
+        <include refid="page_where" />
+	</select>
+
+    <select id="getCount" resultType="int" >
+        select count(enum_id) from cm_attr_enum
+        <include refid="page_where" />
+    </select>
+
+
+    <select id="get" resultMap="cmAttrEnumResultMap" parameterType="String" >
+		select <include refid="table_columns" />
+		from cm_attr_enum
+		where enum_id = #{id}
+	</select>
+	
+	<!-- 其他自定义SQL -->
+
+	<select id="getAttrEnumList" resultMap="cmAttrEnumResultMap" parameterType="String" >
+		select <include refid="table_columns" />
+		from cm_attr_enum
+		where attr_id in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

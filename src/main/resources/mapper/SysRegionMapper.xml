@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.howie.mybatis.dao.SysRegionDao">
+	<resultMap type="com.howie.entity.SysRegionDO" id="sysRegionResultMap">
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="pid" column="PID"/>
+		<result property="lever" column="LEVER"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		ID,
+		NAME,
+		PID,
+		LEVER
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{name},
+		#{pid},
+		#{lever}
+	</sql>
+
+    <!-- 使用like用法：columnName like concat('%',#{columnName},'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+			<if test="id != null">and ID = #{id}</if>
+            <if test="name != null and name != ''">and NAME = #{name}</if>
+			<if test="pid != null">and PID = #{pid}</if>
+			<if test="lever != null">and LEVER = #{lever}</if>
+        </trim>
+    </sql>
+
+	<insert id="insert" parameterType="com.howie.entity.SysRegionDO">
+		insert into sys_region( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.List">		
+		insert into sys_region( <include refid="table_columns" /> ) 
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">  
+		( 
+		#{item.id},
+				#{item.name},
+				#{item.pid},
+				#{item.lever}
+		)
+		</foreach>
+	</insert>
+
+	<delete id="delete" parameterType="String">
+		delete from sys_region
+		where id = #{id}
+	</delete>
+	
+	<update id="deleteBatch">
+		update sys_region set delete_flag = 1
+		where id in
+		<foreach collection="array" item="id" open="(" separator="," close=")">  
+            #{id} 
+        </foreach>		
+	</update>
+
+	<update id="deleteLogic" parameterType="String">
+		update sys_region set delete_flag = 1 
+		where id = #{id}
+	</update>
+
+	<update id="update" parameterType="com.howie.entity.SysRegionDO">
+		update sys_region 
+		<trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">NAME = #{name},</if>
+			<if test="pid != null">PID = #{pid},</if>
+			<if test="lever != null">LEVER = #{lever},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+
+    <select id="findAll" resultMap="sysRegionResultMap">
+        select <include refid="table_columns" />
+        from sys_region
+    </select>
+
+    <select id="findList" resultMap="sysRegionResultMap">
+        select <include refid="table_columns" />
+        from sys_region
+        <include refid="page_where" />
+	</select>
+
+    <select id="getCount" resultType="int" >
+        select count(id) from sys_region
+        <include refid="page_where" />
+    </select>
+
+
+    <select id="get" resultMap="sysRegionResultMap" parameterType="String" >
+		select <include refid="table_columns" />
+		from sys_region
+		where id = #{id}
+	</select>
+	
+	<!-- 其他自定义SQL -->
+
+
+</mapper>
